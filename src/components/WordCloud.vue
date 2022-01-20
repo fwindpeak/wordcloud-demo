@@ -1,133 +1,107 @@
 <template>
   <div class="word-cloud">
-    <div class="row">
-      <canvas id="canvas" ref="canvas" width="640" height="480"></canvas>
-      <textarea type="textarea" name="text" v-model="text" />
+    <article class="row" style="min-height: 480px">
+      <textarea
+        type="textarea"
+        name="text"
+        placeholder="输入文章"
+        v-model="textRaw"
+      />
+      <div class="btn btn-split">
+        <button @click="onWordCut" :disabled="!textRaw">分词</button>
+      </div>
+      <textarea
+        type="textarea"
+        name="text"
+        placeholder="数量 词语"
+        v-model="text"
+      />
+    </article>
+
+    <div class="center">
+      <div style="width: 320px">
+        <span>调节字体大小</span>
+        <input type="number" v-model="weightFactor" @change="onGen" />
+      </div>
     </div>
-    <button @click="onGen">生成</button>
+
+    <div class="center">
+      <div style="width: 320px">
+        <button @click="onGen" :disabled="!text">生成</button>
+      </div>
+    </div>
+
+    <div class="row center">
+      <article>
+        <canvas id="canvas" ref="canvas" width="640" height="480"></canvas>
+      </article>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import WordCloud from 'wordcloud';
-import { cut } from 'jieba-wasm';
-import { getWordsSplit, getRandomColor } from '../utils/index.ts';
+import { getWordsSplit, arrayCount } from '../utils/index';
+import { Segment, useDefault } from 'segmentit';
 
-const canvas = ref<CanvasElement>('');
-const text = ref<string>(`26 Web Technologies
-20 HTML
-20 <canvas>
-15 CSS
-15 JavaScript
-12 Document Object Model
-12 <audio>
-12 <video>
-12 Web Workers
-12 XMLHttpRequest
-12 SVG
-9 JSON.parse()
-9 Geolocation
-9 data attribute
-9 transform
-9 transition
-9 animation
-7 setTimeout
-7 @font-face
-7 Typed Arrays
-7 FileReader API
-7 FormData
-7 IndexedDB
-7 getUserMedia()
-7 postMassage()
-7 CORS
-6 strict mode
-6 calc()
-6 supports()
-6 media queries
-6 full screen
-6 notification
-6 orientation
-6 requestAnimationFrame
-5 border-radius
-5 box-sizing
-5 rgba()
-5 text-shadow
-5 box-shadow
-5 flexbox
-5 viewpoint`);
-
-const demoWeb = `26 Web Technologies
-20 HTML
-20 <canvas>
-15 CSS
-15 JavaScript
-12 Document Object Model
-12 <audio>
-12 <video>
-12 Web Workers
-12 XMLHttpRequest
-12 SVG
-9 JSON.parse()
-9 Geolocation
-9 data attribute
-9 transform
-9 transition
-9 animation
-7 setTimeout
-7 @font-face
-7 Typed Arrays
-7 FileReader API
-7 FormData
-7 IndexedDB
-7 getUserMedia()
-7 postMassage()
-7 CORS
-6 strict mode
-6 calc()
-6 supports()
-6 media queries
-6 full screen
-6 notification
-6 orientation
-6 requestAnimationFrame
-5 border-radius
-5 box-sizing
-5 rgba()
-5 text-shadow
-5 box-shadow
-5 flexbox
-5 viewpoint`;
-const listDemo = [
-  ['zhong', 12],
-  ['bar', 6],
-  ['hello', 3],
-  ['world', 33],
-  ['中文', 212],
-  ['按理说', 6],
-  ['也是', 3],
-  ['ass', 23],
-  ['可以', 33],
-  ['哈哈', 55]
-];
+const canvas = ref<HTMLElement>();
+const textRaw =
+  ref<string>(`中文分词指的是中文在基本文法上有其特殊性而存在的分词。
+分词就是将连续的字序列按照一定的规范重新组合成词序列的过程。我们知道，在英文的行文中，单词之间是以空格作为自然分界符的，而中文只是字、句和段能通过明显的分界符来简单划界，唯独词没有一个形式上的分界符，虽然英文也同样存在短语的划分问题，不过在词这一层上，中文比之英文要复杂得多、困难得多。`);
+const text = ref<string>(``);
 
 onMounted(() => {
   onGen();
 });
 
-const onGen = () => {
-  WordCloud('canvas', {
-    list: getWordsSplit(text.value),
-    // color: (word) => {
-    //   return getRandomColor();
-    // },
-    weightFactor: 1.3
+const weightFactor = ref(1.0);
+
+const onWordCut = () => {
+  const segmentit = useDefault(new Segment());
+  const result = segmentit.doSegment(textRaw.value, {
+    simple: true,
+    stripPunctuation: true
   });
+  console.log(result);
+  const r = arrayCount(result).map((v) => `${v[1]} ${v[0]}`);
+  console.log(r);
+  text.value = r.join('\n');
+};
+
+const onGen = () => {
+  if (canvas.value && text.value) {
+    WordCloud(canvas.value, {
+      list: getWordsSplit(text.value),
+      weightFactor: weightFactor.value
+    });
+  }
 };
 </script>
 
 <style>
+.word-cloud {
+  padding: 1rem;
+}
 .row {
   display: flex;
+  flex-direction: row;
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-split {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  width: 220px;
+}
+
+.btn button {
+  width: 120px;
 }
 </style>

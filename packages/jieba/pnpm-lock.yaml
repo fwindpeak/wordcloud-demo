@@ -2,9 +2,11 @@ lockfileVersion: 5.3
 
 specifiers:
   '@node-rs/jieba': ^1.5.5
+  jieba-wasm: ^0.0.2
 
 dependencies:
   '@node-rs/jieba': registry.npmmirror.com/@node-rs/jieba/1.5.5
+  jieba-wasm: registry.npmmirror.com/jieba-wasm/0.0.2
 
 packages:
 
@@ -170,4 +172,10 @@ packages:
       '@node-rs/jieba-win32-arm64-msvc': registry.npmmirror.com/@node-rs/jieba-win32-arm64-msvc/1.5.5
       '@node-rs/jieba-win32-ia32-msvc': registry.npmmirror.com/@node-rs/jieba-win32-ia32-msvc/1.5.5
       '@node-rs/jieba-win32-x64-msvc': registry.npmmirror.com/@node-rs/jieba-win32-x64-msvc/1.5.5
+    dev: false
+
+  registry.npmmirror.com/jieba-wasm/0.0.2:
+    resolution: {integrity: sha1-WukDPATUyWyDssYnYQmWdgsNGF4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/jieba-wasm/download/jieba-wasm-0.0.2.tgz}
+    name: jieba-wasm
+    version: 0.0.2
     dev: false

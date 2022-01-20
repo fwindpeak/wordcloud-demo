@@ -1,5 +1,24 @@
 const colorList = ['red', 'green', 'blue'];
 
+type NumWord = [string, number];
+
+export const arrayCount: (array: string[]) => NumWord[] = (array) => {
+  const dict = new Map<string, number>();
+
+  for (const item of array) {
+    if (dict.has(item)) {
+      const num = dict.get(item) + 1;
+      dict.set(item, num);
+    } else {
+      dict.set(item, 1);
+    }
+  }
+
+  const result = Array.from(dict).sort((a, b) => b[1] - a[1]);
+
+  return result;
+};
+
 /**
  * 文本行分割为云词数据
  * @param text 文本行 size word

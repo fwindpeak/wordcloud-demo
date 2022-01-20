@@ -1,0 +1,22 @@
+{
+  "name": "wordcloud-demo",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@node-rs/jieba": "^1.5.5",
+    "@picocss/pico": "^1.4.4",
+    "jieba-wasm": "^0.0.2",
+    "vue": "^3.2.25",
+    "wordcloud": "^1.2.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.0.0",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.2",
+    "vue-tsc": "^0.29.8"
+  }
+}

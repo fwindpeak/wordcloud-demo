@@ -7,8 +7,11 @@ export const arrayCount: (array: string[]) => NumWord[] = (array) => {
 
   for (const item of array) {
     if (dict.has(item)) {
-      const num = dict.get(item) + 1;
-      dict.set(item, num);
+      const num = dict.get(item);
+      if (!num) {
+        continue;
+      }
+      dict.set(item, num + 1);
     } else {
       dict.set(item, 1);
     }
